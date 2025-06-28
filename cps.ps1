@@ -14,30 +14,30 @@ Install-Malwarebytes
 # Overclock CPU to maximum
 function Overclock-CPU {
     # Set CPU maximum state to 100%
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1"
+    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1
 
     # Set CPU maximum processor state to 100%
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1"
+    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1
 
     # Set CPU minimum processor state to 100%
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1"
+    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1
 
     # Remove CPU clock max limit
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 0"
+    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 0
 }
 
 # Overclock GPU to maximum
 function Overclock-GPU {
     # Set GPU maximum state to 100%
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000' -Name 'PowerPolicy' -Value 1"
+    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000' -Name 'PowerPolicy' -Value 1
 
     # Remove GPU clock max limit
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000' -Name 'PowerPolicy' -Value 0"
+    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000' -Name 'PowerPolicy' -Value 0
 }
 
 # Disable thermal throttling and shutdown
 function Disable-ThermalManagement {
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\0012ee47-9041-4b5d-9b77-535fba8b1442\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 0"
+    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\0012ee47-9041-4b5d-9b77-535fba8b1442\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 0
 }
 
 # Clear RAM
