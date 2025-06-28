@@ -29,13 +29,13 @@ function Disable-ThermalManagement {
     Set-ItemProperty -Path $thermalPath -Name 'Attributes' -Value 0
 }
 
-# Clear RAM
+# Clear RAM function (using .NET GC to collect and free memory)
 function Clear-RAM {
     [GC]::Collect()
     [GC]::WaitForPendingFinalizers()
 }
 
-# Remove all Microsoft Store bloatware apps
+# Remove bloatware Microsoft Store apps (modify the list as needed)
 function Remove-Bloatware {
     $appsToRemove = @(
         "*3DViewer*",
@@ -55,23 +55,24 @@ function Remove-Bloatware {
     }
 }
 
-# Set paging file to 4000MB
+# Set paging file to 4000MB (fixed string terminator)
 function Set-PagingFile {
     Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management' -Name 'PagingFiles' -Value "C:\pagefile.sys 4000 4000"
 }
 
-# Optimize system
+# Optimize system by trimming and defragging
 function Optimize-System {
     Optimize-Volume -DriveLetter C -ReTrim -Verbose
     Defrag C: -V
 }
 
-# Overclock everything else (increase process priority)
+# Increase current process priority to High
 function Overclock-EverythingElse {
     [System.Diagnostics.Process]::GetCurrentProcess().PriorityClass = [System.Diagnostics.ProcessPriorityClass]::High
 }
 
 # Execute all functions
+Install-Malwarebytes
 Overclock-CPU
 Overclock-GPU
 Disable-ThermalManagement
