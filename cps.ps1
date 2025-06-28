@@ -11,10 +11,10 @@ function Install-Malwarebytes {
 # Install Malwarebytes
 Install-Malwarebytes
 
-# Overclock CPU to 6.00 GHz
+# Overclock CPU to maximum
 function Overclock-CPU {
     # Set CPU maximum state to 100%
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\0012ee47-9041-4b5d-9b77-535fba8b1442\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1"
+    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1"
 
     # Set CPU maximum processor state to 100%
     powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1"
@@ -22,17 +22,17 @@ function Overclock-CPU {
     # Set CPU minimum processor state to 100%
     powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 1"
 
-    # Set CPU maximum performance state to 6.00 GHz
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 6000"
+    # Remove CPU clock max limit
+    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Power\PowerSettings\238c9fa8-0aad-41ed-83f4-97be242c8f20\0b2d69d7-8013-46e3-8249-9e6552e2a40a' -Name 'Attributes' -Value 0"
 }
 
-# Overclock GPU to 6.00 GHz
+# Overclock GPU to maximum
 function Overclock-GPU {
     # Set GPU maximum state to 100%
     powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000' -Name 'PowerPolicy' -Value 1"
 
-    # Set GPU maximum performance state to 6.00 GHz
-    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000' -Name 'PowerPolicy' -Value 6000"
+    # Remove GPU clock max limit
+    powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000' -Name 'PowerPolicy' -Value 0"
 }
 
 # Disable thermal throttling and shutdown
@@ -45,21 +45,35 @@ function Clear-RAM {
     Invoke-Expression "powershell -Command `Clear-Memory -Confirm:$false`"
 }
 
-# Remove all Microsoft apps
-function Remove-MicrosoftApps {
-    Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName -like "*Microsoft*" } | ForEach-Object {
-        if ($_.UninstallString) {
-            Invoke-Expression $_.UninstallString
+# Remove all Microsoft apps and bloatware
+function Remove-Bloatware {
+    $bloatwareApps = @(
+        "Microsoft 3D Viewer",
+        "Microsoft Office Hub",
+        "Microsoft OneDrive",
+        "Microsoft OneNote",
+        "Microsoft Solitaire Collection",
+        "Microsoft Teams",
+        "Microsoft To Do",
+        "Microsoft Your Phone",
+        "Microsoft Xbox",
+        "Microsoft Xbox Game Bar",
+        "Microsoft Xbox Identity Provider",
+        "Microsoft Xbox Live",
+        "Microsoft Xbox Networking",
+        "Microsoft Xbox Speech",
+        "Microsoft Xbox System",
+        "Microsoft Xbox Trophies",
+        "Microsoft Xbox Video",
+        "Microsoft Xbox Wireless Controller"
+    )
+
+    foreach ($app in $bloatwareApps) {
+        $uninstallString = (Get-ItemProperty "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*" | Where-Object { $_.DisplayName -eq $app }).UninstallString
+        if ($uninstallString) {
+            Invoke-Expression $uninstallString
         }
     }
-}
-
-# Debloat system
-function Debloat-System {
-    Disable-WindowsOptionalFeature -Online -FeatureName "MediaFeatures"
-    Disable-WindowsOptionalFeature -Online -FeatureName "Printing-Features"
-    Disable-WindowsOptionalFeature -Online -FeatureName "InternetExplorer"
-    Disable-WindowsOptionalFeature -Online -FeatureName "PowerShellRoot"
 }
 
 # Set paging file to 4000MB
@@ -79,12 +93,12 @@ function Overclock-EverythingElse {
 }
 
 # Execute all functions
+Install-Malwarebytes
 Overclock-CPU
 Overclock-GPU
 Disable-ThermalManagement
 Clear-RAM
-Remove-MicrosoftApps
-Debloat-System
+Remove-Bloatware
 Set-PagingFile
 Optimize-System
 Overclock-EverythingElse
